@@ -34,10 +34,10 @@ string aktuellesVerzeichnis()
    char temp[256];
    
    if (getcwd(temp,256)){
-       return string (temp); //return string(temp), wenn 'working directory path' erfolgreich geholt wurde
+       return string (temp);
    }else
    {
-       return string("");    //sonst return string(" ")
+       return string(""); 
    }
 }
 
@@ -48,21 +48,17 @@ int read_command(char* command, char* parameters[])
     char* tmp = NULL;
         
     string prompt = "> ";
-    string directory = aktuellesVerzeichnis();  //working directory path 
-    cout << directory.append(prompt); //prompt zeicehn wird nach dem string dirctory hinzufuegt
+    string directory = aktuellesVerzeichnis(); 
+    cout << directory.append(prompt);
 
-    cin.getline(befehl, 256); // get eingabe ins befehl array
-
-    // befehl wird zerlegt
+    cin.getline(befehl, 256); // 
+	
     tmp = strtok(befehl, " ");
 
-    //Command wird initialisiert hier
     strcpy(command, tmp);
      
-    //Während tmp nicht leer ist
     while(tmp != NULL)
     {
-        //parameters ist ein array von zeigern auf "chars/strings"
         parameters[i] = new char[256];
         strcpy(parameters[i], tmp);
 
@@ -73,27 +69,26 @@ int read_command(char* command, char* parameters[])
         i++; 
     }
     
-    //Falls wir verzeichnis wechseln müssen 
     if((command[0] == 'c') && (command[1] == 'd'))
     {
-        cout << chdir(parameters[1]) << endl;	//chdir wechselt den aktuellen arbeitsverzeichnis von dem prozess wo er aufgerufen wird
+        cout << chdir(parameters[1]) << endl;	
 	//continue;
     }
             
-    if(strcmp(parameters[i-1], "&") == 0) //wenn parameters[i-1] '&' ist
+    if(strcmp(parameters[i-1], "&") == 0)
     {
         parameters[i-1] = NULL;
         return 0;
     }
     else
     {
-        parameters[i] = NULL; //letztes element ist immer NULL
+        parameters[i] = NULL; 
     }
 
     //Keine Parameter gesetzt
     return 1;
    
-    //Funktion beenden
+   
     return -1;
 }
 
@@ -105,22 +100,14 @@ int main()
     char* parameters[256];
     int noParams;
      startprogram = time(NULL);
-    //Überprüfen auf Zombieprozess und löschen! 
-    if (signal(SIGCHLD, sigchld_handler)) //SIGCHLD ->  to parent on child stop or exit 
+   
+    if (signal(SIGCHLD, sigchld_handler)) 
     { 
-    /*
-    	SIGCHLD -> sobald ein Kind beendet wird, 
-	erfragt Eltern P., auf welche Art der Kind beendet wurde,
-	damit Kind P entgueltig verschwindet. 
-	
-	!! wenn der Eltern P. keine Statusabfrage durchfuehrt,
-	verbleibt das Kind im Zombie-Zustand in der Prozesstabelle
-    */
+  
         perror("signal");
         return 1;
     }
     
-    //signal(Interrupt) durch die Tastatur bei "CTR + C"
     signal(SIGINT, handler);
     bool val = true;
    
