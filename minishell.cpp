@@ -17,7 +17,6 @@ time_t endprogram;
 void handler(int sig)
 {
        
-        //sleep(5);
         endprogram = time(NULL);
         printf("Time vergangen : %ds\n", (endprogram - startprogram));
         exit(0);
